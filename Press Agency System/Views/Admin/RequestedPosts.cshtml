@@ -1,0 +1,150 @@
+﻿@model IEnumerable<Press_Agency_System.Models.Post>
+
+@{
+    ViewBag.Title = "RequestedPosts";
+    Layout = "~/Views/Shared/DashboardLayout.cshtml";
+}
+@if (Session["Username"] == null)
+{
+    Response.Redirect("~/User/Login");
+
+}
+else if (Session["Role"].Equals("Admin"))
+{
+    <h2>Requested posts</h2>
+
+    <div class="alert alert-success" style="display:none;" id="Success">
+
+        <strong>Inserted Successfulyy ..</strong>
+    </div>
+
+    <div class="alert alert-danger" style="display:none;" id="Failed">
+
+        <strong>Insertion Failed ..</strong>
+    </div>
+
+    <p>
+        @Html.ActionLink("Create New Post ", "CreatePost", new { @class = "btn btn-success" })
+    </p>
+    if (!Model.Any())
+    {
+        <div>
+            <h3>There is no posts yet</h3>
+        </div>
+    }
+    else
+    {
+        <table id="posts" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.EditorName)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ArticleTitle)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ArticalBody)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.CreationDate)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ArticleType.Name)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.ViewersNumber)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Accepted)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Image)
+                    </th>
+
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    <tr id="record_@item.Id">
+
+                        <td> @Html.DisplayFor(modelItem => item.EditorName)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.ArticleTitle)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.ArticalBody)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.ArticleType.Name)</td>
+
+                        <td> @Html.DisplayFor(modelItem => item.ViewersNumber)</td>
+
+                        <td> @Html.DisplayFor(modelItem => item.Image)</td>
+
+                        <td>
+                            <button type="button" class="btn btn-primary" id="Accept" onclick="AcceptPost(@item.Id)">Accept Post</button>
+                            <button type="button" class="btn btn-danger" id="refuse" onclick="RefusePost(@item.Id)">Refuse Post</button>
+
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+}
+    @section Scripts{
+
+        @Scripts.Render("~/bundles/jquery")
+        @Scripts.Render("~/bundles/jqueryval")
+
+        <script>
+            function AcceptPost(id) {
+                if (confirm("Are You Sure that you want to accept post?")) {
+
+                    $.ajax({
+
+                        type: "Post",
+                        url: "/Admin/AcceptPost/" + id,
+                        success: function (response) {
+                            if (response.result == 1) {
+
+                                $("#record_" + id).remove();
+                            }
+                            else
+                                alert("Not Accepted")
+                        }
+                    })
+                }
+            }
+            function RefusePost(id) {
+                if (confirm("Are You Sure that you want to refuse post?")) {
+
+                    $.ajax({
+
+                        type: "Post",
+                        url: "/Admin/RefusePost/" + id,
+                        success: function (response) {
+                            if (response.result == 1) {
+
+                                $("#record_" + id).remove();
+                            }
+                            else
+                                alert("Not Refused")
+                        }
+                    })
+                }
+            }
+        </script>
+    }

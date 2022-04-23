@@ -1,0 +1,63 @@
+﻿@model Press_Agency_System.Models.Post
+
+@{
+    ViewBag.Title = "OpenArticle";
+    Layout = "~/Views/Shared/WallLayout.cshtml";
+}
+@if (Session["Username"] == null)
+{
+    Response.Redirect("~/User/Login");
+
+}
+else if (Session["Role"].Equals("Viewer"))
+{
+    <h2>OpenArticle</h2>
+    <table id="posts" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EditorName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleTitle)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticalBody)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleType.Name)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ViewersNumber)
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+
+                <td> @Html.DisplayFor(model => model.EditorName)</td>
+
+                <td>@Html.DisplayFor(model => model.ArticleTitle)</td>
+
+                <td>@Html.DisplayFor(model => model.ArticalBody)</td>
+
+                <td>@Html.DisplayFor(model => model.CreationDate)</td>
+
+                <td>@Html.DisplayFor(model => model.ArticleType.Name)</td>
+
+                <td> @Html.DisplayFor(model => model.ViewersNumber)</td>
+
+            </tr>
+        </tbody>
+
+    </table>
+}

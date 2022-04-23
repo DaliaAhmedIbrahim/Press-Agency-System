@@ -1,0 +1,133 @@
+﻿@model IEnumerable<Press_Agency_System.Models.SavePost>
+@{
+    ViewBag.Title = "ShowAllPosts";
+    Layout = "~/Views/Shared/WallLayout.cshtml";
+
+}
+@if (Session["Username"] == null)
+{
+    Response.Redirect("~/User/Login");
+
+}
+else if (Session["Role"].Equals("Viewer"))
+{
+    <h2>Saved Posts</h2>
+    if (!Model.Any())
+    {
+        <div>
+            <h3>There is no saved posts yet</h3>
+        </div>
+    }
+    else
+    {
+        <table id="posts" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.EditorName)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.ArticleTitle)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.ArticalBody)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.CreationDate)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.ArticleType.Name)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.Post.ViewersNumber)
+                    </th>
+
+                    <th>
+                        @Html.DisplayNameFor(model => model.SaveDate)
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+
+                    <tr>
+
+                        <td> @Html.DisplayFor(modelItem => item.Post.EditorName)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.Post.ArticleTitle)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.Post.ArticalBody)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.Post.CreationDate)</td>
+
+                        <td>@Html.DisplayFor(modelItem => item.Post.ArticleType.Name)</td>
+
+                        <td> @Html.DisplayFor(modelItem => item.Post.ViewersNumber)</td>
+
+                        <td> @Html.DisplayFor(modelItem => item.SaveDate)</td>
+
+                        <td>
+                            @Html.ActionLink("Ask a Question", "Ask", new { id = item.Id }, new { @class = "btn btn-success" })
+                            <button type="button" class="btn btn-primary" id="like" onclick="LikePost(@item.Id)">Like</button>
+                            <button type="button" class="btn btn-primary" id="dislike" onclick="DisLikePost(@item.Id)">DisLike</button>
+                            <a href="/Viewer/OpenArticle/@item.Id" class="btn btn-primary" target="_blank"> Open Post</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+
+        </table>
+    }
+}
+    @section Scripts{
+        @Scripts.Render("~/bundles/jquery")
+
+        <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+        <script src="~/Scripts/DataTables/dataTables.bootstrap.js"></script>
+
+        <script>
+            function LikePost(id) {
+                if (confirm("Are You Sure that you want to Like post?")) {
+
+                    $.ajax({
+
+                        type: "Post",
+                        url: "/Viewer/LikePost/" + id,
+                        success: function (response) {
+                            if (response.result == 1) {
+
+                                alert("Post Liked")
+                            }
+                            else
+                                alert("Not Liked")
+                        }
+                    })
+                }
+            }
+            function DisLikePost(id) {
+                if (confirm("Are You Sure that you want to DisLike post?")) {
+
+                    $.ajax({
+
+                        type: "Post",
+                        url: "/Viewer/DisLikePost/" + id,
+                        success: function (response) {
+                            if (response.result == 1) {
+
+                                alert("Post Disliked")
+                            }
+                            else
+                                alert("Nothing Happend")
+                        }
+                    })
+                }
+            }
+        </script>
+    }

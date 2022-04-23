@@ -1,0 +1,79 @@
+﻿@model IEnumerable<Press_Agency_System.Models.Post>
+
+@{
+    ViewBag.Title = "BeforeLogIn";
+    Layout = "~/Views/Shared/WallLayout.cshtml";
+}
+
+<h2>All Posts</h2>
+
+@if (!Model.Any())
+{
+    <div>
+        <h3>There is no posts yet</h3>
+    </div>
+}
+else
+{
+    <table id="posts" class="table table-striped table-bordered table-hover">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.EditorName)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleTitle)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticalBody)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.CreationDate)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ArticleType.Name)
+                </th>
+
+                <th>
+                    @Html.DisplayNameFor(model => model.ViewersNumber)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+
+                <tr>
+
+                    <td> @Html.DisplayFor(modelItem => item.EditorName)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.ArticleTitle)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.ArticalBody)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.CreationDate)</td>
+
+                    <td>@Html.DisplayFor(modelItem => item.ArticleType.Name)</td>
+
+                    <td> @Html.DisplayFor(modelItem => item.ViewersNumber)</td>
+
+                </tr>
+            }
+        </tbody>
+
+    </table>
+}
+@section Scripts{
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/DataTables/dataTables.bootstrap.js"></script>
+    <script src="~/Scripts/DataTables/jquery.dataTables.js"></script>
+    <script>
+        $(document).ready(function () {
+            var table = $("#posts").DataTable();
+        });
+    </script>
+}
